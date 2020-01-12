@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:rflutter_alert/rflutter_alert.dart';
+
 // import 'questions.dart';
 import 'quiz_brain.dart';
 
@@ -31,6 +33,46 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
+
+  int score = 0;
+
+  void checkAnswer(bool userPickedAnswer) {
+    bool correctAnswer = quizBrain.getCorrectAnswer();
+    setState(() {
+      if (quizBrain.isFinished() == false) {
+        if (userPickedAnswer == correctAnswer) {
+          scoreKeeper.add(
+            Icon(Icons.check, color: Colors.green),
+          );
+          score += 1;
+        } else {
+          scoreKeeper.add(
+            Icon(Icons.close, color: Colors.red),
+          );
+        }
+        quizBrain.nextQuestion();
+      } else {
+        if (userPickedAnswer == correctAnswer) {
+          scoreKeeper.add(
+            Icon(Icons.check, color: Colors.green),
+          );
+          score += 1;
+        } else {
+          scoreKeeper.add(
+            Icon(Icons.close, color: Colors.red),
+          );
+        }
+        Alert(
+          context: context,
+          title: "Finished!",
+          desc: "You've completed the quiz and your score is $score",
+        ).show();
+        quizBrain.reset();
+        scoreKeeper = [];
+        score = 0;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,20 +110,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-
-                bool correctAnswer = quizBrain.getCorrectAnswer();
-
-                if(correctAnswer == true)
-                  print('Hooray!!');
-                else
-                  print('Boo!');
-
-                setState(() {
-                  scoreKeeper.add(
-                    Icon(Icons.check, color: Colors.green),
-                  );
-                  quizBrain.nextQuestion();
-                });
+                checkAnswer(true);
               },
             ),
           ),
@@ -99,20 +128,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-
-                bool correctAnswer = quizBrain.getCorrectAnswer();
-
-                if(correctAnswer == false)
-                  print('Hooray!!');
-                else
-                  print('Boo!');
-
-                setState(() {
-                  scoreKeeper.add(
-                    Icon(Icons.close, color: Colors.red),
-                  );
-                  quizBrain.nextQuestion();
-                });
+                checkAnswer(false);
               },
             ),
           ),

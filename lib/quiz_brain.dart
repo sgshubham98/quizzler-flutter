@@ -38,6 +38,13 @@ class QuizBrain {
     }
   }
 
+  bool isFinished(){
+    if(_questionNumber >= _questionBank.length - 1){
+      return true;
+    }
+    return false;
+  }
+
   String getQuestionText(){
     return _questionBank[_questionNumber].questionText;
   }
@@ -45,4 +52,9 @@ class QuizBrain {
   bool getCorrectAnswer(){
     return _questionBank[_questionNumber].answerText;
   }
+
+  void reset(){
+    _questionNumber = 0;
+  }
+
 }
